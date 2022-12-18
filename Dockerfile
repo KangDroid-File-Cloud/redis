@@ -3,7 +3,6 @@ FROM alpine:3.15 as builder
 MAINTAINER Opstree Solutions
 
 LABEL VERSION=1.0 \
-      ARCH=AMD64 \
       DESCRIPTION="A production grade performance tuned redis docker image created by Opstree Solutions"
 
 ARG REDIS_DOWNLOAD_URL="http://download.redis.io/"
@@ -16,7 +15,7 @@ RUN curl -fL -Lo /tmp/redis-${REDIS_VERSION}.tar.gz ${REDIS_DOWNLOAD_URL}/redis-
     cd /tmp && \
     tar xvzf redis-${REDIS_VERSION}.tar.gz && \
     cd redis-${REDIS_VERSION} && \
-    make && \
+    make -j4 && \
     make install BUILD_TLS=yes
 
 FROM alpine:3.15
@@ -24,7 +23,6 @@ FROM alpine:3.15
 MAINTAINER Opstree Solutions
 
 LABEL VERSION=1.0 \
-      ARCH=AMD64 \
       DESCRIPTION="A production grade performance tuned redis docker image created by Opstree Solutions"
 
 COPY --from=builder /usr/local/bin/redis-server /usr/local/bin/redis-server
